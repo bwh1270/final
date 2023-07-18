@@ -1,0 +1,14 @@
+<launch>
+    <node pkg="nodelet" type="nodelet" args="manager" name="nodelet_2" output="screen"/>
+
+    <!-- Convert to point cloud -->
+    <node pkg="nodelet" type="nodelet" name="point_cloud_xyz" args="load depth_image_proc/point_cloud_xyz nodelet_2 --no-bond">
+   
+        <remap from="camera_info" to="/camera/depth/camera_info"/>
+
+        <remap from="image_rect" to="/camera/depth/image_rect"/>
+
+        <remap from="points" to="/camera/depth/points"/>
+
+    </node>
+</launch>

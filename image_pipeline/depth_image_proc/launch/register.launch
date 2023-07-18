@@ -1,0 +1,18 @@
+<launch>
+    <node pkg="nodelet" type="nodelet" args="manager" name="nodelet_3" output="screen"/>
+
+    <!-- Convert to point cloud -->
+    <node pkg="nodelet" type="nodelet" name="register" args="load depth_image_proc/register nodelet_3 --no-bond">
+   
+        <remap from="/rgb/camera_info" to="/camera/color/camera_info"/>
+
+        <remap from="/depth/camera_info" to="/camera/depth/camera_info"/>
+
+        <remap from="/depth/image_rect" to="/camera/depth/image_rect"/>
+
+        <remap from="/depth_registered/camera_info" to="/camera/depth_registered/camera_info"/>
+
+        <remap from="/depth_registered/image_rect" to="/camera/depth_registered/image_rect"/>
+
+    </node>
+</launch>

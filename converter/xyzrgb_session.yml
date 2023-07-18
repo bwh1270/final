@@ -1,0 +1,26 @@
+name: carrot_xyzrgb
+root: ./
+start_window: octomap
+windows:
+  - octomap:
+      layout: tiled
+      panes:
+        - waitForRos; sleep 1; roslaunch octomap_server octomap_mapping.launch
+        - waitForRos; rosrun converter vicon_tf_node
+        - roscore
+        - waitForRos; rosrun image_transport republish in:=/red/camera/color/image_raw compressed raw out:=/red/camera/color/image_raw _image_transport:=compressed
+        - waitForRos; roslaunch image_proc image_proc.launch
+        - waitForRos; roslaunch depth_image_proc convert_metric.launch
+        - waitForRos; roslaunch depth_image_proc register.launch
+        - waitForRos; roslaunch depth_image_proc point_cloud_xyzrgb.launch
+        
+
+  - carrot:
+      layout: tiled
+      panes:
+        
+        #- waitForRos; sleep 1; rosrun converter poi_talker_node
+        - waitForRos; sleep 1; rosrun converter converter_node
+        - waitForRos; sleep 2; rosrun converter make_map_2d.py
+        - waitForRos; sleep 3; rosrun converter path_2d.py
+        - waitForRos; sleep 4; rosbag play ../icuas23_pose_dark_2023-06-06-20-34-45.bag

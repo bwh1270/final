@@ -1,0 +1,24 @@
+name: carrot_p1c1
+root: ./
+start_window: planning
+windows:
+  - map:
+      layout: tiled
+      panes:
+        - waitForRos; sleep 1; roslaunch octomap_server octomap_mapping.launch
+        - waitForRos; sleep 1.5; rosrun converter converter_2d_node
+        - waitForRos; sleep 2;   rosrun converter make_map_2d.py
+          #- waitForRos; sleep 2; rostopic hz /octomap_point_cloud_centers
+  - planning:
+      layout: tiled
+      panes:
+        - waitForRos; sleep 3; rosrun converter path_fresh.py
+        - waitForRos; sleep 5; rosrun converter crack_bbox.py
+        - waitForRos; sleep 5; rosbag record -a
+          #- waitForRos; sleep 5; rosbag play test.bag
+        - waitForRos; rostopic hz /red/tracker/input_pose
+        - roscore
+        #For the carrot_test
+        #- waitForRos; rosrun icuas23_competition spawn_tiles.py __ns:="red"
+        #- waitForRos; rosrun converter vicon_tf_node
+          #- waitForRos; rosbag play -r 0.1 ../icuas23_pose_dark_2023-06-06-20-34-45.bag
